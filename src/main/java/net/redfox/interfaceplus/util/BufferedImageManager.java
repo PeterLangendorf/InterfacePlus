@@ -21,7 +21,7 @@ public class BufferedImageManager {
                 LOGGER.info("Image at '" + imgPath + "' was successfully loaded!");
                 return ImageIO.read(stream);
             }
-        } catch (IOException _) {
+        } catch (IOException e) {
         }
         return new BufferedImage(1, 1, 1);
     }
