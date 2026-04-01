@@ -7,9 +7,9 @@ public class WindowContext {
     private Dimension dimensions;
     private final Point location;
 
-    public WindowContext() {
-        this(0, 0);
-    }
+	public WindowContext() {
+		this(0, 0);
+	}
 
     public WindowContext(Graphics2D g2, Point location, Dimension dimensions) {
         this.g2 = g2;
