@@ -21,12 +21,12 @@ public class DisplayPanel extends JPanel implements Runnable {
 	public DisplayPanel(Interface i, int fps, Size2 size) {
 		this.size = size;
 		this.fps = fps;
-		context = new WindowContext();
+    this.panelInterface = i;
+    context = new WindowContext();
 		this.setDoubleBuffered(true);
-		this.addKeyListener(new KeyHandler());
+		this.addKeyListener(new KeyHandler(panelInterface::addTask));
 		this.addMouseListener(new MouseHandler());
 		this.setFocusable(true);
-		this.panelInterface = i;
 		this.renderer = new Renderer();
 	}
 
