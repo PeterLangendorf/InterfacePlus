@@ -54,26 +54,6 @@ public class Button extends RenderableObject {
         return 1;
     }
 
-    @Override
-    public void update(WindowContext context) {
-        super.update(context);
-        switch (getState(context)) {
-            case 1 -> drawImage(context, defaultImg);
-            case 2 -> {
-                drawImage(context, hoverImg);
-                buttonDown = false;
-            }
-            case 3 -> {
-                drawImage(context, clickImg);
-                if (!buttonDown || holdTrigger) {
-                    buttonDown = true;
-                    for (Task t : clickTaskList) {
-                        t.execute();
-                    }
-                }
-            }
-        }
-    }
 
     @Override
     public String getName() {
@@ -126,4 +106,23 @@ public class Button extends RenderableObject {
             return super.build(new Button(defaultImg, hoverImg, clickImg, position, holdTrigger));
         }
     }
+	@Override
+	public void update(WindowContext context) {
+		switch (getState(context)) {
+			case 1 -> BufferedImageManager.drawImage(context.getGraphics2D(), defaultImg, getPosition(), getSize());
+			case 2 -> {
+				BufferedImageManager.drawImage(context.getGraphics2D(), hoverImg, getPosition(), getSize());
+				buttonDown = false;
+			}
+			case 3 -> {
+				BufferedImageManager.drawImage(context.getGraphics2D(), clickImg, getPosition(), getSize());
+				if (!buttonDown || holdTrigger) {
+					buttonDown = true;
+					for (Task t : clickTaskList) {
+						t.execute();
+					}
+				}
+			}
+		}
+	}
 }

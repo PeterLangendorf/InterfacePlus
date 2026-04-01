@@ -35,8 +35,8 @@ public class AnimatedPanel extends RenderableObject {
             frameDelay++;
         }
 
-        drawImage(context, displayImages[currentFrame]);
-    }
+		BufferedImageManager.drawImage(context.getGraphics2D(), displayImages[currentFrame], getPosition(), getSize());
+	}
 
     @Override
     public String getName() {

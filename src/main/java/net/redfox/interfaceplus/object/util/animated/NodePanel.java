@@ -29,10 +29,10 @@ public class NodePanel extends RenderableObject {
         }
     }
 
-    @Override
-    public void update(WindowContext context) {
-        drawImage(context, displayImages[currentFrame]);
-    }
+	@Override
+	public void update(WindowContext context) {
+		BufferedImageManager.drawImage(context.getGraphics2D(), displayImages[currentFrame], getPosition(), getSize());
+	}
 
     @Override
     public String getName() {

@@ -14,10 +14,10 @@ public abstract class RenderableImage extends RenderableObject {
         this.displayImage = displayImage;
     }
 
-    @Override
-    public void update(WindowContext context) {
-        drawImage(context, displayImage);
-    }
+	@Override
+	public void update(WindowContext context) {
+		BufferedImageManager.drawImage(context.getGraphics2D(), displayImage, getPosition(), getSize());
+	}
 
     public abstract static class Builder extends RenderableObject.Builder {
         protected BufferedImage displayImage;

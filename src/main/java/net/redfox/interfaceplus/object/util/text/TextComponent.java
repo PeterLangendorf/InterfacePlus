@@ -45,13 +45,6 @@ public class TextComponent extends RenderableObject {
         this.color = color;
     }
 
-    @Override
-    public void update(WindowContext context) {
-        Graphics2D g = context.getGraphics2D();
-        g.setFont(font);
-        g.setColor(color);
-        g.drawString(contents, (int) (this.getX() + 0.5), (int) (this.getY() + 0.5));
-    }
 
     public String getContents() {
         return contents;
@@ -116,4 +109,11 @@ public class TextComponent extends RenderableObject {
             return build(new TextComponent(contents, position, size, color, font, fontSize, style));
         }
     }
+	@Override
+	public void update(WindowContext context) {
+		Graphics2D g = context.getGraphics2D();
+		g.setFont(font);
+		g.setColor(color);
+		g.drawString(contents, (int) (this.getX() + 0.5), (int) (this.getY() + 0.5));
+	}
 }
