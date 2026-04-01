@@ -1,23 +1,25 @@
 package net.redfox.interfaceplus.gui.util;
 
+import net.redfox.interfaceplus.math.Size2;
+
 import java.awt.*;
 
 public class WindowContext {
     private Graphics2D g2;
-    private Dimension dimensions;
+    private Size2 dimensions;
     private final Point location;
 
 	public WindowContext() {
 		this(0, 0);
 	}
 
-    public WindowContext(Graphics2D g2, Point location, Dimension dimensions) {
+    public WindowContext(Graphics2D g2, Point location, Size2 dimensions) {
         this.g2 = g2;
         this.location = location;
         this.dimensions = dimensions;
     }
 
-    public WindowContext(Graphics2D g2, int x, int y, Dimension dimensions) {
+    public WindowContext(Graphics2D g2, int x, int y, Size2 dimensions) {
         this(g2, new Point(x, y), dimensions);
     }
 
@@ -43,11 +45,11 @@ public class WindowContext {
         return location;
     }
 
-    public Dimension getDimensions() {
+    public Size2 getDimensions() {
         return dimensions;
     }
 
-    public void setDimensions(Dimension dimensions) {
+    public void setDimensions(Size2 dimensions) {
         this.dimensions = dimensions;
     }
 
