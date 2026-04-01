@@ -4,11 +4,12 @@ plugins {
 }
 
 group = "net.redfox.interfaceplus"
-version = "1.1.1"
+version = "1.1.2"
 
 repositories {
     mavenCentral()
 }
+
 
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
