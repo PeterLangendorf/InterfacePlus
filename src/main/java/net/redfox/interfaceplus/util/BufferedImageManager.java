@@ -18,10 +18,17 @@ public class BufferedImageManager {
 
 	/**
 	 * Creates a new {@link BufferedImage} containing the image provided by the {@link String} input path. If the path is invalid, returns an empty {@link BufferedImage}
-	 * @param imgPath The path to the image, in the resource folder, with / as the resources directory.
+	 * @param imgPath The path to the image in the resource folder.
 	 * @return A new {@link BufferedImage} using the path provided.
 	 */
 	public static BufferedImage getImage(String imgPath) {
+    if (!imgPath.endsWith(".png")) {
+      LOGGER.warn("Image path provided did not end in .png! " + imgPath);
+    }
+    if (!imgPath.startsWith("/")) {
+      imgPath = "/" + imgPath;
+    }
+
 		try {
 			InputStream stream = BufferedImageManager.class.getResourceAsStream(imgPath);
 			if (stream == null) {
