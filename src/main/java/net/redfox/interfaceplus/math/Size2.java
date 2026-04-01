@@ -31,3 +31,7 @@ public class Size2 {
 		this.height = height;
 	}
 
+	public Dimension toDimension() {
+		return new Dimension(width, height);
+	}
+}
