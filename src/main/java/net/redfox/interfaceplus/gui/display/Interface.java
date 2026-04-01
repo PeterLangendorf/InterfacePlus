@@ -10,8 +10,6 @@ import net.redfox.interfaceplus.object.Renderer;
 import net.redfox.interfaceplus.task.Task;
 
 public class Interface {
-	private static int totalInterfaces = 0;
-	private final int identifier;
 	private final ArrayList<Task> taskList = new ArrayList<>();
 	private final JFrame window;
 	private final DisplayPanel panel;
@@ -32,10 +30,7 @@ public class Interface {
 		window.setVisible(true);
 
 		panel.startGameThread();
-
-		identifier = totalInterfaces;
-		totalInterfaces++;
-	}
+  }
 
 	public void update() {
 		for (Task t : taskList) {
@@ -53,10 +48,6 @@ public class Interface {
 
 	public Renderer getRenderer() {
 		return panel.renderer;
-	}
-
-	public int getIdentifier() {
-		return identifier;
 	}
 
 	public static class Builder {
