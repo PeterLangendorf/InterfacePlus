@@ -64,6 +64,7 @@ public class DisplayPanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         context.setG2(g2);
+        context.setDimensions(size);
         context.setLocation(this.getLocationOnScreen());
         if (context.isUsable()) panelInterface.updateImages(context);
         g2.dispose();
