@@ -3,6 +3,8 @@ package net.redfox.interfaceplus.math;
 import java.awt.Dimension;
 
 public class Size2 {
+  public static final Size2 kDefaultResolution = new Size2(1920, 1080);
+
 	private int width;
 	private int height;
 
