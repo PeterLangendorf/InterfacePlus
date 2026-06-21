@@ -7,18 +7,22 @@ import net.redfox.interfaceplus.gui.util.WindowContext;
 import net.redfox.interfaceplus.math.Size2;
 import net.redfox.interfaceplus.math.Vector2;
 import net.redfox.interfaceplus.object.RenderableObject;
-import net.redfox.interfaceplus.object.Renderer;
 import net.redfox.interfaceplus.task.Task;
 import net.redfox.interfaceplus.util.BufferedImageManager;
 
 @SuppressWarnings("unused")
 public class Button extends RenderableObject {
+	public enum ButtonState {
+		PRESSED, HOVER, NONE
+	}
+
 	private final ArrayList<Task> clickTaskList = new ArrayList<>();
 	private final BufferedImage hoverImg, clickImg;
 	private final BufferedImage defaultImg;
 	private final boolean holdTrigger;
 
-	private boolean buttonDown = false;
+	private boolean cachedButtonDown = false;
+	private ButtonState state = ButtonState.NONE;
 
 	protected Button(BufferedImage defaultImg, BufferedImage hoverImg, BufferedImage clickImg, Vector2 position,
 			boolean holdTrigger) {
@@ -41,33 +45,45 @@ public class Button extends RenderableObject {
 		clickTaskList.add(t);
 	}
 
-	private int getState(WindowContext context) {
+	@Override
+	public void update(WindowContext context) {
 		if (MouseHandler.overlaps(this, context)) {
 			if (MouseHandler.isMouseDown()) {
-				return 3;
+				state = ButtonState.PRESSED;
+			} else {
+				state = ButtonState.HOVER;
 			}
-			return 2;
+		} else {
+			state = ButtonState.NONE;
 		}
-		return 1;
 	}
 
 	@Override
-	public void update(WindowContext context) {
-		switch (getState(context)) {
-			case 1 -> BufferedImageManager.drawImage(context.getGraphics2D(), defaultImg, getPosition(), getSize());
-			case 2 -> {
-				BufferedImageManager.drawImage(context.getGraphics2D(), hoverImg, getPosition(), getSize());
-				buttonDown = false;
-			}
-			case 3 -> {
-				BufferedImageManager.drawImage(context.getGraphics2D(), clickImg, getPosition(), getSize());
-				if (!buttonDown || holdTrigger) {
-					buttonDown = true;
-					for (Task t : clickTaskList) {
-						t.execute();
-					}
+	public void render(WindowContext context) {
+		switch (state) {
+			case NONE -> BufferedImageManager.drawImage(context.getGraphics2D(), defaultImg,
+					new Vector2(getX() + context.getDrawOffset().getX(), getY() + context.getDrawOffset().getY()),
+					getSize(), context.getZoom());
+			case HOVER -> BufferedImageManager.drawImage(context.getGraphics2D(), hoverImg,
+					new Vector2(getX() + context.getDrawOffset().getX(), getY() + context.getDrawOffset().getY()),
+					getSize(), context.getZoom());
+			case PRESSED -> BufferedImageManager.drawImage(context.getGraphics2D(), clickImg,
+					new Vector2(getX() + context.getDrawOffset().getX(), getY() + context.getDrawOffset().getY()),
+					getSize(), context.getZoom());
+		}
+	}
+
+	@Override
+	public void postRender(WindowContext context) {
+		if (state == ButtonState.PRESSED) {
+			if (!cachedButtonDown || holdTrigger) {
+				cachedButtonDown = true;
+				for (Task t : clickTaskList) {
+					t.execute();
 				}
 			}
+		} else {
+			cachedButtonDown = false;
 		}
 	}
 
@@ -83,8 +99,8 @@ public class Button extends RenderableObject {
 		private BufferedImage defaultImg;
 		private boolean holdTrigger;
 
-		public Builder(Renderer renderer) {
-			super(renderer);
+		public Builder() {
+			super();
 			hoverImg = null;
 			clickImg = null;
 			defaultImg = null;
@@ -119,7 +135,7 @@ public class Button extends RenderableObject {
 
 		@Override
 		public Button build() {
-			return super.build(new Button(defaultImg, hoverImg, clickImg, position, holdTrigger));
+			return new Button(defaultImg, hoverImg, clickImg, position, holdTrigger);
 		}
 	}
 }

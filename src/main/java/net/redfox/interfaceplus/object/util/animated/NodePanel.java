@@ -5,7 +5,6 @@ import net.redfox.interfaceplus.gui.util.WindowContext;
 import net.redfox.interfaceplus.math.Size2;
 import net.redfox.interfaceplus.math.Vector2;
 import net.redfox.interfaceplus.object.RenderableObject;
-import net.redfox.interfaceplus.object.Renderer;
 import net.redfox.interfaceplus.util.BufferedImageManager;
 
 @SuppressWarnings("unused")
@@ -31,8 +30,10 @@ public class NodePanel extends RenderableObject {
 	}
 
 	@Override
-	public void update(WindowContext context) {
-		BufferedImageManager.drawImage(context.getGraphics2D(), displayImages[currentFrame], getPosition(), getSize());
+	public void render(WindowContext context) {
+		BufferedImageManager.drawImage(context.getGraphics2D(), displayImages[currentFrame],
+				new Vector2(getX() + context.getDrawOffset().getX(), getY() + context.getDrawOffset().getY()),
+				getSize(), context.getZoom());
 	}
 
 	@Override
@@ -45,8 +46,8 @@ public class NodePanel extends RenderableObject {
 		private BufferedImage[] displayImages;
 		private boolean repeat;
 
-		public Builder(Renderer renderer) {
-			super(renderer);
+		public Builder() {
+			super();
 			repeat = true;
 			displayImages = new BufferedImage[]{};
 		}
@@ -69,7 +70,7 @@ public class NodePanel extends RenderableObject {
 
 		@Override
 		public NodePanel build() {
-			return super.build(new NodePanel(displayImages, position, repeat));
+			return new NodePanel(displayImages, position, repeat);
 		}
 	}
 }

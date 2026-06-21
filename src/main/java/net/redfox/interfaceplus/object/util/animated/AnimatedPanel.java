@@ -5,7 +5,6 @@ import net.redfox.interfaceplus.gui.util.WindowContext;
 import net.redfox.interfaceplus.math.Size2;
 import net.redfox.interfaceplus.math.Vector2;
 import net.redfox.interfaceplus.object.RenderableObject;
-import net.redfox.interfaceplus.object.Renderer;
 import net.redfox.interfaceplus.util.BufferedImageManager;
 
 @SuppressWarnings("unused")
@@ -35,8 +34,12 @@ public class AnimatedPanel extends RenderableObject {
 		} else {
 			frameDelay++;
 		}
-
-		BufferedImageManager.drawImage(context.getGraphics2D(), displayImages[currentFrame], getPosition(), getSize());
+	}
+	@Override
+	public void render(WindowContext context) {
+		BufferedImageManager.drawImage(context.getGraphics2D(), displayImages[currentFrame],
+				new Vector2(getX() + context.getDrawOffset().getX(), getY() + context.getDrawOffset().getY()),
+				getSize(), context.getZoom());
 	}
 
 	@Override
@@ -49,8 +52,8 @@ public class AnimatedPanel extends RenderableObject {
 		private BufferedImage[] displayImages;
 		private int frameRate;
 
-		public Builder(Renderer renderer) {
-			super(renderer);
+		public Builder() {
+			super();
 		}
 
 		public AnimatedPanel.Builder frameRate(int frameRate) {
@@ -71,7 +74,7 @@ public class AnimatedPanel extends RenderableObject {
 
 		@Override
 		public AnimatedPanel build() {
-			return super.build(new AnimatedPanel(displayImages, position, frameRate));
+			return new AnimatedPanel(displayImages, position, frameRate);
 		}
 	}
 }

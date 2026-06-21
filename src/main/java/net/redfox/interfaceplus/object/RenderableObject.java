@@ -8,10 +8,14 @@ import net.redfox.interfaceplus.math.Vector2;
 public abstract class RenderableObject implements Renderable {
 	private final Vector2 position;
 	private final Size2 size;
+	private boolean isHidden;
+	private boolean isAboutToDie;
 
 	protected RenderableObject(Size2 size, Vector2 position) {
 		this.position = position;
 		this.size = size;
+		this.isHidden = false;
+		this.isAboutToDie = false;
 	}
 
 	public void setX(double x) {
@@ -43,13 +47,41 @@ public abstract class RenderableObject implements Renderable {
 		return size;
 	}
 
-	public abstract void update(WindowContext context);
-
 	public abstract String getName();
 
 	@Override
+	public void hide() {
+		isHidden = true;
+	}
+	@Override
+	public void show() {
+		isHidden = false;
+	}
+	@Override
+	public void toggleVisibility() {
+		isHidden = !isHidden;
+	}
+	@Override
+	public boolean isHidden() {
+		return isHidden;
+	}
+	@Override
+	public void destroy() {
+		this.isAboutToDie = true;
+	}
+
+	@Override
+	public void update(WindowContext context) {
+	}
+
+	@Override
+	public void preRender(WindowContext context) {
+	}
+	@Override
 	public void render(WindowContext context) {
-		update(context);
+	}
+	@Override
+	public void postRender(WindowContext context) {
 	}
 
 	@Override
@@ -59,10 +91,8 @@ public abstract class RenderableObject implements Renderable {
 
 	protected abstract static class Builder {
 		protected final Vector2 position;
-		private final Renderer renderer;
 
-		public Builder(Renderer renderer) {
-			this.renderer = renderer;
+		public Builder() {
 			position = new Vector2(0, 0);
 		}
 
@@ -71,13 +101,8 @@ public abstract class RenderableObject implements Renderable {
 			this.position.setY(position.getY());
 		}
 
-		public <T extends Renderable> T build(T object) {
-			renderer.register(object);
-			return object;
-		}
-
 		public abstract <T extends Renderable> T build();
 
-		public abstract <K extends RenderableObject.Builder> K position(Vector2 position);
+		public abstract <K extends Builder> K position(Vector2 position);
 	}
 }

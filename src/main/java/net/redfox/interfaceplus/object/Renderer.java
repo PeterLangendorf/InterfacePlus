@@ -1,32 +1,37 @@
 package net.redfox.interfaceplus.object;
 
-import java.util.ArrayList;
+import net.redfox.interfaceplus.gui.Screen;
 import net.redfox.interfaceplus.gui.util.WindowContext;
 
 public class Renderer {
-	private final ArrayList<Renderable> objects;
-	private final ArrayList<Renderable> renderableObjectQueue;
+	private Screen currentScreen;
 
-	public Renderer() {
-		objects = new ArrayList<>();
-		renderableObjectQueue = new ArrayList<>();
-	}
-
-	public void renderObjects(WindowContext context) {
-		if (!renderableObjectQueue.isEmpty())
-			updateRenderableObjectList();
-
-		for (Renderable r : objects) {
-			r.render(context);
+	public void updateObjects(WindowContext context) {
+		if (currentScreen == null)
+			return;
+		for (Renderable r : currentScreen.getRenderables()) {
+			r.update(context);
 		}
 	}
 
-	private void updateRenderableObjectList() {
-		objects.addAll(renderableObjectQueue);
-		renderableObjectQueue.clear();
+	public void renderObjects(WindowContext context) {
+		if (currentScreen == null)
+			return;
+		for (Renderable r : currentScreen.getRenderables()) {
+			r.preRender(context);
+		}
+		for (Renderable r : currentScreen.getRenderables()) {
+			r.render(context);
+		}
+		for (Renderable r : currentScreen.getRenderables()) {
+			r.postRender(context);
+		}
 	}
 
-	public void register(Renderable object) {
-		renderableObjectQueue.add(object);
+	public void switchToScreen(Screen screen) {
+		if (currentScreen != null)
+			currentScreen.switchAwayFromScreen();
+		currentScreen = screen;
+		currentScreen.switchToScreen();
 	}
 }

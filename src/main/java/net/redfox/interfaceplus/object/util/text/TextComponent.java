@@ -7,7 +7,6 @@ import net.redfox.interfaceplus.gui.util.WindowContext;
 import net.redfox.interfaceplus.math.Size2;
 import net.redfox.interfaceplus.math.Vector2;
 import net.redfox.interfaceplus.object.RenderableObject;
-import net.redfox.interfaceplus.object.Renderer;
 
 @SuppressWarnings("unused")
 public class TextComponent extends RenderableObject {
@@ -40,11 +39,11 @@ public class TextComponent extends RenderableObject {
 	}
 
 	@Override
-	public void update(WindowContext context) {
+	public void render(WindowContext context) {
 		Graphics2D g = context.getGraphics2D();
 		g.setFont(font);
 		g.setColor(color);
-		g.drawString(contents, (int) (this.getX() + 0.5), (int) (this.getY() + 0.5));
+		g.drawString(contents, (int) getX(), (int) getY());
 	}
 
 	public String getContents() {
@@ -65,8 +64,8 @@ public class TextComponent extends RenderableObject {
 		private int fontSize;
 		private Size2 size;
 
-		public Builder(Renderer renderer) {
-			super(renderer);
+		public Builder() {
+			super();
 		}
 
 		public TextComponent.Builder fontSize(int fontSize) {
@@ -107,7 +106,7 @@ public class TextComponent extends RenderableObject {
 
 		@Override
 		public TextComponent build() {
-			return build(new TextComponent(contents, position, size, color, font, fontSize, style));
+			return new TextComponent(contents, position, size, color, font, fontSize, style);
 		}
 	}
 }

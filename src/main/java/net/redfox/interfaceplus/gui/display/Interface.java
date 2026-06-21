@@ -4,8 +4,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import net.redfox.interfaceplus.gui.DisplayPanel;
+import net.redfox.interfaceplus.gui.Screen;
 import net.redfox.interfaceplus.gui.util.WindowContext;
 import net.redfox.interfaceplus.math.Size2;
+import net.redfox.interfaceplus.math.Vector2;
 import net.redfox.interfaceplus.object.Renderer;
 import net.redfox.interfaceplus.task.Task;
 
@@ -13,6 +15,7 @@ public class Interface {
 	private final ArrayList<Task> taskList = new ArrayList<>();
 	private final JFrame window;
 	private final DisplayPanel panel;
+	private double zoom = 1;
 
 	protected Interface(String title, Size2 size, Color background, int FPS) {
 		window = new JFrame();
@@ -30,7 +33,7 @@ public class Interface {
 		window.setVisible(true);
 
 		panel.startGameThread();
-  }
+	}
 
 	public void update() {
 		for (Task t : taskList) {
@@ -38,8 +41,8 @@ public class Interface {
 		}
 	}
 
-	public void updateImages(WindowContext context) {
-		panel.renderer.renderObjects(context);
+	public void render(WindowContext context) {
+		panel.getRenderer().renderObjects(context);
 	}
 
 	public void addTask(Task t) {
@@ -47,7 +50,20 @@ public class Interface {
 	}
 
 	public Renderer getRenderer() {
-		return panel.renderer;
+		return panel.getRenderer();
+	}
+
+	public void switchToScreen(Screen screen) {
+		getRenderer().switchToScreen(screen);
+	}
+	public double getZoom() {
+		return zoom;
+	}
+	public void setZoom(double zoom) {
+		this.zoom = zoom;
+	}
+	public void setDrawOffset(Vector2 offset) {
+		this.panel.setDrawOffset(offset);
 	}
 
 	public static class Builder {
@@ -58,7 +74,7 @@ public class Interface {
 
 		public Builder() {
 			title = "Untitled";
-			size = new Size2(1920, 1080);
+			size = Size2.kDefaultResolution;
 			background = Color.WHITE;
 			FPS = 60;
 		}

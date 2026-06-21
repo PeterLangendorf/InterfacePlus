@@ -7,6 +7,7 @@ import net.redfox.interfaceplus.gui.util.KeyHandler;
 import net.redfox.interfaceplus.gui.util.MouseHandler;
 import net.redfox.interfaceplus.gui.util.WindowContext;
 import net.redfox.interfaceplus.math.Size2;
+import net.redfox.interfaceplus.math.Vector2;
 import net.redfox.interfaceplus.object.Renderer;
 
 public class DisplayPanel extends JPanel implements Runnable {
@@ -16,18 +17,28 @@ public class DisplayPanel extends JPanel implements Runnable {
 	private Thread thread;
 	private final Interface panelInterface;
 	private final WindowContext context;
-	public final Renderer renderer;
+	private final Renderer renderer;
+	private Vector2 offset;
 
 	public DisplayPanel(Interface i, int fps, Size2 size) {
 		this.size = size;
 		this.fps = fps;
-    this.panelInterface = i;
-    context = new WindowContext();
+		this.panelInterface = i;
+		context = new WindowContext();
 		this.setDoubleBuffered(true);
 		this.addKeyListener(new KeyHandler(panelInterface::addTask));
 		this.addMouseListener(new MouseHandler());
 		this.setFocusable(true);
 		this.renderer = new Renderer();
+		this.offset = new Vector2(0, 0);
+	}
+
+	public Renderer getRenderer() {
+		return renderer;
+	}
+
+	public void setDrawOffset(Vector2 offset) {
+		this.offset = offset;
 	}
 
 	public void startGameThread() {
@@ -51,6 +62,8 @@ public class DisplayPanel extends JPanel implements Runnable {
 
 			if (delta >= 1) {
 				panelInterface.update();
+				renderer.updateObjects(context);
+
 				repaint();
 
 				delta--;
@@ -66,9 +79,12 @@ public class DisplayPanel extends JPanel implements Runnable {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		context.setG2(g2);
-    context.setDimensions(size);
+		context.setDimensions(size);
+		context.setZoom(panelInterface.getZoom());
 		context.setLocation(this.getLocationOnScreen());
-		if (context.isUsable()) panelInterface.updateImages(context);
+		context.setDrawOffset(offset);
+		if (context.isUsable())
+			panelInterface.render(context);
 		g2.dispose();
 	}
 }

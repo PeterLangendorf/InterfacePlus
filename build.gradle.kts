@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "net.redfox.interfaceplus"
-version = "1.1.3"
+version = "1.3.6"
 
 repositories {
     mavenCentral()

@@ -16,17 +16,19 @@ public abstract class RenderableImage extends RenderableObject {
 	}
 
 	@Override
-	public void update(WindowContext context) {
-		BufferedImageManager.drawImage(context.getGraphics2D(), displayImage, getPosition(), getSize());
+	public void render(WindowContext context) {
+		if (!isHidden())
+			BufferedImageManager.drawImage(context.getGraphics2D(), displayImage,
+					new Vector2(getX() + context.getDrawOffset().getX(), getY() + context.getDrawOffset().getY()),
+					getSize(), context.getZoom());
 	}
 
 	public abstract static class Builder extends RenderableObject.Builder {
-		protected BufferedImage displayImage;
-
-		public Builder(Renderer renderer) {
-			super(renderer);
-			displayImage = null;
+		public Builder() {
+			super();
 		}
+
+		protected BufferedImage displayImage;
 
 		protected final void setDisplayImage(BufferedImage displayImage) {
 			this.displayImage = displayImage;

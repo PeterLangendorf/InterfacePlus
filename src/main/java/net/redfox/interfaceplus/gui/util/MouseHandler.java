@@ -3,6 +3,8 @@ package net.redfox.interfaceplus.gui.util;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
+import net.redfox.interfaceplus.math.Vector2;
 import net.redfox.interfaceplus.object.RenderableObject;
 
 public class MouseHandler implements MouseListener {
@@ -32,11 +34,14 @@ public class MouseHandler implements MouseListener {
 
 	public static boolean overlaps(RenderableObject object, WindowContext context) {
 		Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
-		Point windowLocation = context.getLocation();
-		mouseLocation.x -= windowLocation.x;
-		mouseLocation.y -= windowLocation.y;
-		return object.getX() <= mouseLocation.x && object.getX() + object.getSize().getWidth() >= mouseLocation.x
-				&& object.getY() <= mouseLocation.y && object.getY() + object.getSize().getHeight() >= mouseLocation.y;
+		Vector2 windowLocation = context.getLocation();
+		mouseLocation.x -= (int) windowLocation.getX();
+		mouseLocation.y -= (int) windowLocation.getY();
+		return object.getX() * context.getZoom() <= mouseLocation.x
+				&& object.getX() * context.getZoom()
+						+ object.getSize().getWidth() * context.getZoom() >= mouseLocation.x
+				&& object.getY() * context.getZoom() <= mouseLocation.y && object.getY() * context.getZoom()
+						+ object.getSize().getHeight() * context.getZoom() >= mouseLocation.y;
 	}
 
 	public static boolean isMouseDown() {
